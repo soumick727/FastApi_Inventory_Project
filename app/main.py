@@ -1,18 +1,14 @@
 from fastapi import FastAPI
+from app.routers import product_router
+from app.schemas.supplier_schema import SupplierBase
+from app.schemas.category_schema import CategoryBase
+
 app = FastAPI()
 
 @app.get("/")
 def home():
     return {"message": "Welcome to the Inventory Management API!"}
 
-@app.get("/products")
-def get_products():
-    return {
-        "products": [
-            {"id": 1, "name": "Laptop", "quantity": 10, "price": 999.99},
-            {"id": 2, "name": "Mouse", "quantity": 50, "price": 29.99}
-        ]
-    }
 
 @app.get("/suppliers")
 def get_suppliers():
@@ -40,3 +36,23 @@ def get_dashboard():
         "total_low_stock": 5,
         "total_out_of_stock": 2,
     }
+
+
+    
+@app.post("/suppliers/add")
+def create_supplier(supplier: SupplierBase):
+    return {
+        "message": "Supplier created successfully!",
+        "supplier_name": supplier.name,
+        "supplier_phone": supplier.phone,
+        "supplier_address": supplier.address
+    }
+
+@app.post("/categories/add")
+def create_category(category: CategoryBase):
+    return {
+        "message": "Category created successfully!",
+        "category_title": category.title
+    }
+    
+app.include_router(product_router.router)
